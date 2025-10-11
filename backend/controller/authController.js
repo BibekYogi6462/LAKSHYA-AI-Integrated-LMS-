@@ -2,6 +2,8 @@ import User from "../model/usermodel.js";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import genToken from "./token.js";
+
+//SignUp Controller
 export const signUp = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -31,5 +33,13 @@ export const signUp = async (req, res) => {
       sameSite: "Strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, //7days(ms)
     });
-  } catch (error) {}
+
+    return res.status(201).json(user);
+  } catch (error) {
+    return res.status(500).json({
+      message: `Signup Error ${error}`,
+    });
+  }
 };
+
+//Login Controller

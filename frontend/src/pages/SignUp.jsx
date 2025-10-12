@@ -34,7 +34,7 @@ const SignUp = () => {
       console.log(result.data);
       setLoading(false);
       navigate("/");
-      toast.done("Account Signed Up Successfully");
+      toast.success("Account Signed Up Successfully");
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || "Signup failed");

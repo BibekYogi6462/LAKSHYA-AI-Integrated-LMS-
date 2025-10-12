@@ -1,7 +1,7 @@
 import User from "../model/usermodel.js";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-import genToken from "./token.js";
+import genToken from "../config/token.js";
 
 //SignUp Controller
 export const signUp = async (req, res) => {

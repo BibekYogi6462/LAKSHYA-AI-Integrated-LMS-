@@ -4,11 +4,14 @@ import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import { ToastContainer } from "react-toastify";
-import getCurrentUser from "./customHooks/getCurrentUser";
+// import getCurrentUser from "./customHooks/getCurrentUser";
+import useGetCurrentUser from "./customHooks/getCurrentUser";
+
 export const serverUrl = "http://localhost:8000";
 
 const App = () => {
-  getCurrentUser();
+  // getCurrentUser();
+  useGetCurrentUser();
   return (
     <>
       <ToastContainer />

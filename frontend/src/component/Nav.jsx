@@ -87,7 +87,7 @@ const Nav = () => {
 
         {/* Dropdown Menu */}
         {show && (
-          <div className="absolute top-[110%] right-[0] flex flex-col gap-2 text-[16px] rounded-md bg-white px-[15px] py-[10px] border-[2px] border-black cursor-pointer">
+          <div className="absolute top-[150%] right-[0] flex flex-col gap-2 text-[16px] rounded-md bg-white px-[15px] py-[10px] border-[2px] border-black cursor-pointer">
             <span className="bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600">
               My Profile
             </span>

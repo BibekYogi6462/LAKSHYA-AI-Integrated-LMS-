@@ -8,12 +8,15 @@ import { ClipLoader } from "react-spinners";
 import { serverUrl } from "../App";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 
 const Login = () => {
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -28,8 +31,9 @@ const Login = () => {
         },
         { withCredentials: true }
       );
-      console.log(result.data);
+      dispatch(setUserData(result.data));
       setLoading(false);
+
       toast.success("Login Successfully");
       navigate("/");
     } catch (error) {

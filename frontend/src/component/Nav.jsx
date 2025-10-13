@@ -87,11 +87,14 @@ const Nav = () => {
 
         {/* Dropdown Menu */}
         {show && (
-          <div className="absolute top-[150%] right-[0] flex flex-col gap-2 text-[16px] rounded-md bg-white px-[15px] py-[10px] border-[2px] border-black cursor-pointer">
-            <span className="bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600">
+          <div
+            className="absolute top-[150%] right-[0] flex flex-col gap-2 text-[16px] rounded-md bg-white px-[15px] py-[10px] border-[2px] border-black cursor-pointer"
+            onClick={() => navigate("/profile")}
+          >
+            <span className="bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600 cursor-pointer">
               My Profile
             </span>
-            <span className="bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600">
+            <span className="bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600 cursor-pointer">
               My Courses
             </span>
           </div>
@@ -134,23 +137,24 @@ const Nav = () => {
         )}
 
         <div
-          className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors"
-          onClick={() => setShowHam(false)}
+          className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors cursor-pointer"
+          // onClick={() => setShowHam(false)}
+          onClick={() => navigate("/profile")}
         >
           My Profile
         </div>
 
         <div
-          className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors"
-          onClick={() => setShowHam(false)}
+          className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors cursor-pointer"
+          // onClick={() => setShowHam(false)}
         >
           My Courses
         </div>
 
         {userData?.role === "instructor" && (
           <button
-            className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors"
-            onClick={() => setShowHam(false)}
+            className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors cursor-pointer"
+            // onClick={() => setShowHam(false)}
           >
             Dashboard
           </button>

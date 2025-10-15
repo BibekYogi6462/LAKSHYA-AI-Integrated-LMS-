@@ -1,4 +1,4 @@
-import { createTransport } from "nodemailer";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 const transporter = nodemailer.createTransport({
@@ -17,7 +17,7 @@ const sendMail = async (to, otp) => {
     to: to,
     subject: "Reset Your Pssword",
     text: "Hello world?", // plain‑text body
-    html: `<p>Your OTP fro password reset is <b>${otp} </b>.</p>`, // HTML body
+    html: `<p>Your OTP for password reset is <b>${otp} </b>.</p>`, // HTML body
   });
 };
 

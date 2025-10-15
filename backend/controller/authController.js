@@ -2,6 +2,7 @@ import User from "../model/usermodel.js";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import genToken from "../config/token.js";
+import sendMail from "../config/sendMail.js";
 
 //SignUp Controller
 export const signUp = async (req, res) => {

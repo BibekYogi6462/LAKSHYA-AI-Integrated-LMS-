@@ -48,7 +48,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     let user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "USer not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     let isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -78,5 +78,64 @@ export const logOut = async (req, res) => {
     return res.status(500).json({
       message: `Unable to Log out ${error}`,
     });
+  }
+};
+
+export const sendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({
+      email,
+    });
+    if (!user) {
+      return res.status(404).json({ message: "USer not found" });
+    }
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    (user.resetOtp = otp),
+      (user.otpExpires = Date.now() + 5 * 60 * 1000),
+      (user.isOtpVerified = false);
+
+    await user.save();
+    await sendMail(email, otp);
+    return res.status(200).json({ message: "OTP Sent Successfully" });
+  } catch (error) {
+    return res.status(500).json({
+      message: `Unable to send OTP ${error}`,
+    });
+  }
+};
+
+export const verifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || user.resetOtp != otp || user.otpExpires < Date.now()) {
+      return res.status(404).json({ message: "Invalid OTP" });
+    }
+    (user.isOtpVerified = true),
+      (user.resetOtp = undefined),
+      (user.otpExpires = undefined);
+
+    await user.save();
+    return res.status(200).json({ message: "OTP Verified Successfully" });
+  } catch (error) {
+    return res.status(404).json({ message: "Unable to verify OTP" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !user.isOtpVerified) {
+      return res.status(404).json({ message: "OTP verification is required" });
+    }
+    const hashPassword = await bcrypt.hash(password, 10);
+    (user.password = hashPassword), (user.isOtpVerified = false);
+
+    await user.save();
+    return res.status(200).json({ message: "Reset Password Successfully" });
+  } catch (error) {
+    return res.status(404).json({ message: "Unable to reset password" });
   }
 };

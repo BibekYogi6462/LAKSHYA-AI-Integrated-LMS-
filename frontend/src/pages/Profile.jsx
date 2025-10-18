@@ -46,7 +46,10 @@ const Profile = () => {
           </div>
         </div>
         <div className="mt-6 flex justify-center gap-4">
-          <button className="px-5 py-2 rounded bg-[black] text-white active:bg-[#4b4b4b] cursor-pointer transition">
+          <button
+            className="px-5 py-2 rounded bg-[black] text-white active:bg-[#4b4b4b] cursor-pointer transition"
+            onClick={() => navigate("/editprofile")}
+          >
             Edit Profile
           </button>
         </div>

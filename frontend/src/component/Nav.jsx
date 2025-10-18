@@ -54,7 +54,13 @@ const Nav = () => {
             onClick={() => setShow((prev) => !prev)}
           />
         )}
-        {userData && (
+        {userData?.photoUrl ? (
+          <img
+            src={userData?.photoUrl}
+            className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-gray-800 text-white font-semibold text-lg cursor-pointer shadow-md hover:scale-105 transition-transform"
+            onClick={() => setShow((prev) => !prev)}
+          />
+        ) : (
           <div
             className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-gray-800 text-white font-semibold text-lg cursor-pointer shadow-md hover:scale-105 transition-transform"
             onClick={() => setShow((prev) => !prev)}
@@ -104,7 +110,12 @@ const Nav = () => {
       {/* Mobile Hamburger Menu */}
       <div className="flex lg:hidden items-center gap-4">
         {/* Show user avatar on mobile when logged in */}
-        {userData && (
+        {userData?.photoUrl ? (
+          <img
+            src={userData?.photoUrl}
+            className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-gray-800 text-white font-semibold text-lg cursor-pointer shadow-md hover:scale-105 transition-transform"
+          />
+        ) : (
           <div
             className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-gray-800 text-white font-semibold text-lg cursor-pointer shadow-md hover:scale-105 transition-transform"
             onClick={() => setShowHam((prev) => !prev)}
@@ -130,7 +141,12 @@ const Nav = () => {
           onClick={() => setShowHam(false)}
         />
 
-        {userData && (
+        {userData?.photoUrl ? (
+          <img
+            src={userData?.photoUrl}
+            className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-gray-800 text-white font-semibold text-lg cursor-pointer shadow-md hover:scale-105 transition-transform"
+          />
+        ) : (
           <div className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-gray-800 text-white font-semibold text-lg cursor-pointer shadow-md hover:scale-105 transition-transform">
             {userData?.name.slice(0, 1).toUpperCase()}
           </div>

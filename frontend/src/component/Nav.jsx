@@ -70,7 +70,10 @@ const Nav = () => {
         )}
 
         {userData?.role === "instructor" && (
-          <button className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors">
+          <button
+            className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors"
+            onClick={() => navigate("/dashboard")}
+          >
             Dashboard
           </button>
         )}
@@ -171,6 +174,7 @@ const Nav = () => {
           <button
             className="px-4 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition-colors cursor-pointer"
             // onClick={() => setShowHam(false)}
+            onClick={() => navigate("/dashboard")}
           >
             Dashboard
           </button>

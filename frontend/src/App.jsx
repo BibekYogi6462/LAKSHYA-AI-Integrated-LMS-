@@ -12,6 +12,7 @@ import ForgetPassword from "./pages/ForgetPassword";
 import EditProfile from "./pages/EditProfile";
 import Dashboard from "./pages/Educator/Dashboard";
 import Courses from "./pages/Educator/Courses";
+import CreateCourses from "./pages/Educator/CreateCourses";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -53,6 +54,16 @@ const App = () => {
           element={
             userData?.role === "instructor" ? (
               <Courses />
+            ) : (
+              <Navigate to={"/signup"} />
+            )
+          }
+        />
+        <Route
+          path="/createcourse"
+          element={
+            userData?.role === "instructor" ? (
+              <CreateCourses />
             ) : (
               <Navigate to={"/signup"} />
             )

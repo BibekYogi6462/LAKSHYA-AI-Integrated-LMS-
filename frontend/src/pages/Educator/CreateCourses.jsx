@@ -22,10 +22,12 @@ const CreateCourses = () => {
         { withCredentials: true }
       );
       console.log(result.data);
+      navigate("/courses");
       setLoading(false);
       toast.success("Course Created");
     } catch (error) {
       console.log(error);
+
       setLoading(false);
       toast.error(error.response.data.message);
     }

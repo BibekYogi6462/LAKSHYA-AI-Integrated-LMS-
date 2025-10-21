@@ -13,12 +13,15 @@ import EditProfile from "./pages/EditProfile";
 import Dashboard from "./pages/Educator/Dashboard";
 import Courses from "./pages/Educator/Courses";
 import CreateCourses from "./pages/Educator/CreateCourses";
+import getCreatorCourse from "./customHooks/getCreatorCOurse";
+import EditCourse from "./pages/Educator/EditCourse";
 
 export const serverUrl = "http://localhost:8000";
 
 const App = () => {
   // getCurrentUser();
   useGetCurrentUser();
+  getCreatorCourse();
   const { userData } = useSelector((state) => state.user);
   return (
     <>
@@ -64,6 +67,16 @@ const App = () => {
           element={
             userData?.role === "instructor" ? (
               <CreateCourses />
+            ) : (
+              <Navigate to={"/signup"} />
+            )
+          }
+        />
+        <Route
+          path="/editcourse/:courseId"
+          element={
+            userData?.role === "instructor" ? (
+              <EditCourse />
             ) : (
               <Navigate to={"/signup"} />
             )

@@ -1,6 +1,6 @@
 import { response } from "express";
 import Course from "../model/courseModel.js";
-import uploadOnCloudinary from "../config/cloudinary";
+import uploadOnCloudinary from "../config/cloudinary.js";
 
 export const createCourse = async (req, res) => {
   try {
@@ -10,7 +10,7 @@ export const createCourse = async (req, res) => {
     }
     const course = await Course.create({
       title,
-      description,
+      category,
       creator: req.userId,
     });
 

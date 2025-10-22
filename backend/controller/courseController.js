@@ -22,7 +22,7 @@ export const createCourse = async (req, res) => {
 
 export const getPublisedCourses = async (req, res) => {
   try {
-    const courses = await Course.find({ isPublised: true });
+    const courses = await Course.find({ isPublished: true });
     if (!courses) {
       return res.status(400).json({ message: "Courses Not Found" });
     }
@@ -51,35 +51,103 @@ export const getCreatorCourses = async (req, res) => {
   }
 };
 
+// export const editCourse = async (req, res) => {
+//   try {
+//     const { courseId } = req.params;
+//     const {
+//       title,
+//       subTitle,
+//       description,
+//       category,
+//       level,
+//       isPublished,
+//       price,
+//     } = req.body;
+//     let thumbnail;
+//     if (req.file) {
+//       thumbnail = await uploadOnCloudinary(req.file.path);
+//     }
+//     let course = await Course.findById(courseId);
+//     if (!course) {
+//       return res.status(400).json({ message: "Course is not Found" });
+//     }
+//     const updateData = {
+//       title,
+//       subTitle,
+//       description,
+//       category,
+//       level,
+//       isPublished: isPublished == "true",
+//       price,
+//       thumbnail,
+//     };
+
+//     course = await Course.findByIdAndUpdate(courseId, updateData, {
+//       new: true,
+//     });
+//     return res.status(200).json(course);
+//   } catch (error) {
+//     return res.status(500).json({ message: `Failed to  edit Course ${error}` });
+//   }
+// };
+
 export const editCourse = async (req, res) => {
   try {
     const { courseId } = req.params;
-    const { title, subTitle, description, category, level, isPublised, price } =
-      req.body;
-    let thumbnail;
-    if (req.file) {
-      thumbnail = await uploadOnCloudinary(req.file.path);
-    }
-    let course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(400).json({ message: "Course is not Found" });
-    }
-    const updateData = {
+    const {
       title,
       subTitle,
       description,
       category,
       level,
-      isPublised,
+      isPublished,
       price,
-      thumbnail,
+    } = req.body;
+
+    console.log(
+      "Received isPublished:",
+      isPublished,
+      "Type:",
+      typeof isPublished
+    );
+
+    let thumbnail;
+    if (req.file) {
+      thumbnail = await uploadOnCloudinary(req.file.path);
+    }
+
+    let course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(400).json({ message: "Course is not Found" });
+    }
+
+    // Build update object
+    const updateData = {
+      title: title || course.title,
+      subTitle: subTitle || course.subTitle,
+      description: description || course.description,
+      category: category || course.category,
+      level: level || course.level,
+      price: price || course.price,
+      isPublished: isPublished === "true" || isPublished === true, // Handle both string and boolean
     };
 
-    course -
-      (await Course.findByIdAndUpdate(courseId, updateData, { new: true }));
+    // Only update thumbnail if a new one was uploaded
+    if (thumbnail) {
+      updateData.thumbnail = thumbnail;
+    }
+
+    console.log("Updating with data:", updateData);
+
+    course = await Course.findByIdAndUpdate(courseId, updateData, {
+      new: true,
+    });
+
+    console.log("Updated course:", course);
     return res.status(200).json(course);
   } catch (error) {
-    return res.status(500).json({ message: `Failed to  edit Course ${error}` });
+    console.log("Edit course error:", error);
+    return res.status(500).json({ message: `Failed to edit Course ${error}` });
   }
 };
 

@@ -26,6 +26,7 @@ const EditCourse = () => {
   const [frontendImage, setFrontendImage] = useState(img);
   const [backendImage, setBackendImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
 
   const handleThumbnail = (e) => {
     const file = e.target.files[0];
@@ -88,6 +89,13 @@ const EditCourse = () => {
       setLoading(false);
       toast.error(error.response.data.message);
     }
+  };
+
+  const handleRemoveCourse = async () => {
+    setLoading1(true);
+    try {
+      const result = await axios.delete(serverUrl + `/api/course/remove`);
+    } catch (error) {}
   };
 
   return (

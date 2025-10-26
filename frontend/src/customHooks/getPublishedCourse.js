@@ -21,7 +21,7 @@ const getPublishedCourse = () => {
       }
     };
     getCourseData();
-  }, []);
+  }, [dispatch]);
 };
 
 export default getPublishedCourse;

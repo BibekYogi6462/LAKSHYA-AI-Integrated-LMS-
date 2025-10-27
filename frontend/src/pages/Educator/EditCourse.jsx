@@ -335,10 +335,7 @@ import { serverUrl } from "../../App";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setCourseData,
-  updateCourseInCreatorData,
-} from "../../redux/courseSlice";
+import { setCourseData } from "../../redux/courseSlice";
 
 const EditCourse = () => {
   const navigate = useNavigate();
@@ -469,7 +466,10 @@ const EditCourse = () => {
         </h2>
 
         <div className="space-x-2 space-y-2">
-          <button className="bg-black text-white px-4 py-2 rounded-md">
+          <button
+            className="bg-black text-white px-4 py-2 rounded-md"
+            onClick={() => navigate(`/createlecture/${selectCourse?._id}`)}
+          >
             Go To Lecture Page
           </button>
         </div>

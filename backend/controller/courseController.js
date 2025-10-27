@@ -1,6 +1,7 @@
 import { response } from "express";
 import Course from "../model/courseModel.js";
 import uploadOnCloudinary from "../config/cloudinary.js";
+import Lecture from "../model/lectureModel.js";
 
 export const createCourse = async (req, res) => {
   try {
@@ -50,46 +51,6 @@ export const getCreatorCourses = async (req, res) => {
       .json({ message: `Failed to Get Creator Courses ${error}` });
   }
 };
-
-// export const editCourse = async (req, res) => {
-//   try {
-//     const { courseId } = req.params;
-//     const {
-//       title,
-//       subTitle,
-//       description,
-//       category,
-//       level,
-//       isPublished,
-//       price,
-//     } = req.body;
-//     let thumbnail;
-//     if (req.file) {
-//       thumbnail = await uploadOnCloudinary(req.file.path);
-//     }
-//     let course = await Course.findById(courseId);
-//     if (!course) {
-//       return res.status(400).json({ message: "Course is not Found" });
-//     }
-//     const updateData = {
-//       title,
-//       subTitle,
-//       description,
-//       category,
-//       level,
-//       isPublished: isPublished == "true",
-//       price,
-//       thumbnail,
-//     };
-
-//     course = await Course.findByIdAndUpdate(courseId, updateData, {
-//       new: true,
-//     });
-//     return res.status(200).json(course);
-//   } catch (error) {
-//     return res.status(500).json({ message: `Failed to  edit Course ${error}` });
-//   }
-// };
 
 export const editCourse = async (req, res) => {
   try {
@@ -179,5 +140,31 @@ export const removeCourse = async (req, res) => {
     return res
       .status(500)
       .json({ message: `Failed to remove course ${error}` });
+  }
+};
+
+// For Lctures
+
+export const createLecture = async (req, res) => {
+  try {
+    const { lectureTitle } = req.body;
+    const { courseId } = req.params;
+    if (lectureTitle || courseId) {
+      return res.status(400).json({
+        message: "Lecture Title is required",
+      });
+    }
+    const lecture = await Lecture.create({ lectureTitle });
+    const course = await Course.findById(courseId);
+    if (course) {
+      course.lectures.push(lecture._id);
+    }
+    course.populate("lectures");
+    course.save();
+    return res.status(201).json({ lecture, course });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Failed to create lecture ${error}` });
   }
 };

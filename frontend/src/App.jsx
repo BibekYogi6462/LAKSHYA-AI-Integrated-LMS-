@@ -110,6 +110,7 @@ import getCreatorCourse from "./customHooks/getCreatorCOurse";
 import EditCourse from "./pages/Educator/EditCourse";
 import AllCourses from "./pages/AllCourses";
 import CreateLecture from "./pages/Educator/CreateLecture";
+import EditLecture from "./pages/Educator/EditLecture";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -190,6 +191,16 @@ const App = () => {
           element={
             userData?.role === "instructor" ? (
               <CreateLecture />
+            ) : (
+              <Navigate to={"/signup"} />
+            )
+          }
+        />
+        <Route
+          path="/editlecture/:courseId/:lectureId"
+          element={
+            userData?.role === "instructor" ? (
+              <EditLecture />
             ) : (
               <Navigate to={"/signup"} />
             )

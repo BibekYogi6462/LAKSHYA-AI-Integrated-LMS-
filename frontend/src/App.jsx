@@ -92,6 +92,7 @@
 // };
 
 // export default App;
+
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
@@ -111,12 +112,15 @@ import EditCourse from "./pages/Educator/EditCourse";
 import AllCourses from "./pages/AllCourses";
 import CreateLecture from "./pages/Educator/CreateLecture";
 import EditLecture from "./pages/Educator/EditLecture";
+import ViewCourse from "./pages/ViewCOurse";
+import getPublishedCourse from "./customHooks/getPublishedCourse"; // ADD THIS IMPORT
 
 export const serverUrl = "http://localhost:8000";
 
 const App = () => {
   useGetCurrentUser();
   getCreatorCourse();
+  getPublishedCourse(); // ADD THIS LINE
 
   const { userData } = useSelector((state) => state.user);
   return (
@@ -201,6 +205,16 @@ const App = () => {
           element={
             userData?.role === "instructor" ? (
               <EditLecture />
+            ) : (
+              <Navigate to={"/signup"} />
+            )
+          }
+        />
+        <Route
+          path="/viewcourse/:courseId/"
+          element={
+            userData?.role === "instructor" ? (
+              <ViewCourse />
             ) : (
               <Navigate to={"/signup"} />
             )

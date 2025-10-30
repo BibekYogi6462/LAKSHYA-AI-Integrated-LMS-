@@ -21,9 +21,35 @@ export const createCourse = async (req, res) => {
   }
 };
 
-export const getPublisedCourses = async (req, res) => {
+// export const getPublishedCourses = async (req, res) => {
+//   try {
+//     const courses = await Course.find({ isPublished: true }).populate(
+//       "lectures"
+//     );
+//     if (!courses) {
+//       return res.status(400).json({ message: "Courses Not Found" });
+//     }
+//     return res.status(200).json(courses);
+//   } catch (error) {
+//     return res
+//       .status(500)
+//       .json({ message: `Failed to find publised courses ${error}` });
+//   }
+// };
+export const getPublishedCourses = async (req, res) => {
   try {
-    const courses = await Course.find({ isPublished: true });
+    const courses = await Course.find({ isPublished: true })
+      .populate({
+        path: "lectures",
+        model: "Lecture",
+      })
+      .exec();
+
+    console.log(
+      "AFTER POPULATE - First course lectures:",
+      courses[0]?.lectures
+    );
+
     if (!courses) {
       return res.status(400).json({ message: "Courses Not Found" });
     }
@@ -31,10 +57,9 @@ export const getPublisedCourses = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ message: `Failed to find publised courses ${error}` });
+      .json({ message: `Failed to find published courses ${error}` });
   }
 };
-
 export const getCreatorCourses = async (req, res) => {
   try {
     const userId = req.userId;

@@ -7,7 +7,7 @@ import {
   getCourseLecture,
   getCoursesById,
   getCreatorCourses,
-  getPublisedCourses,
+  getPublishedCourses,
   removeCourse,
   removeLecture,
 } from "../controller/courseController.js";
@@ -17,7 +17,7 @@ import upload from "../middleware/multer.js";
 const courseRouter = express.Router();
 
 courseRouter.post("/create", isAuth, createCourse);
-courseRouter.get("/getpublised", getPublisedCourses);
+courseRouter.get("/getpublished", getPublishedCourses);
 courseRouter.get("/getcreator", isAuth, getCreatorCourses);
 
 courseRouter.post(

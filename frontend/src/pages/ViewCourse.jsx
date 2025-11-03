@@ -7,6 +7,9 @@ import img from "../assets/empty.jpg";
 import { FaPlayCircle } from "react-icons/fa";
 import { FaLock } from "react-icons/fa6";
 import { useState } from "react";
+import Card from "../component/Card";
+import axios from "axios"; // Add this import
+import { serverUrl } from "../App"; // Import serverUrl from App.js
 
 const ViewCourse = () => {
   const navigate = useNavigate();
@@ -15,6 +18,8 @@ const ViewCourse = () => {
   const { selectedCourse } = useSelector((state) => state.course);
   const dispatch = useDispatch();
   const [selectedLecture, setSelectedLecture] = useState(null);
+  const [creatorData, setCreatorData] = useState(null);
+  const [creatorCourses, setCreatorCourses] = useState(null);
 
   const fetchCourseData = async () => {
     courseData.map((course) => {
@@ -28,8 +33,39 @@ const ViewCourse = () => {
   };
 
   useEffect(() => {
+    const handleCreator = async () => {
+      if (selectedCourse?.creator) {
+        try {
+          const result = await axios.post(
+            serverUrl + "/api/course/creator",
+            {
+              userId: selectedCourse?.creator,
+            },
+            { withCredentials: true }
+          );
+          console.log(result.data);
+          setCreatorData(result.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    handleCreator();
+  }, [selectedCourse]);
+
+  useEffect(() => {
     fetchCourseData();
   }, [courseData, courseId]);
+
+  useEffect(() => {
+    if (creatorData?._id && courseData.length > 0) {
+      const creatorCourse = courseData.filter(
+        (course) =>
+          course.creator === creatorData?._id && course._id !== courseId
+      );
+      setCreatorCourses(creatorCourse);
+    }
+  }, [creatorData, courseData]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -172,6 +208,51 @@ const ViewCourse = () => {
               Submit
             </button>
           </div>
+        </div>
+
+        {/* For Instructor/creator info */}
+
+        <div className="flex items-center gap-4 pt-4 border-t">
+          {creatorData?.photoUrl ? (
+            <img
+              src={creatorData?.photoUrl}
+              className="w-16 h-16 rounded-full object-cover border-1 border-gray-200"
+            />
+          ) : (
+            <img
+              src={img}
+              alt=""
+              className="w-16 h-16 rounded-full object-cover border-1 border-gray-200"
+            />
+          )}
+
+          <div>
+            <h2 className="text-lg font-semibold">{creatorData?.name}</h2>
+            <p className="md:text-sm text-gray-600 text-[10px] ">
+              {creatorData?.description}
+            </p>
+            <p className="md:text-sm text-gray-600 text-[10px]">
+              creatorData?.email
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <p className="text-xl font-semibold mb-2">
+            Other Publised Courses by the Educator -
+          </p>
+        </div>
+        <div className="w-full transition-all duration-300 py-[20px] flex items-start justify-center lg:justify-start flex-wrap gap-6 lg:px-[80px] ">
+          {creatorCourses?.map((course, index) => (
+            <Card
+              key={index}
+              thumbnail={course.thumbnail}
+              id={course._id}
+              price={course.price}
+              title={course.title}
+              category={course.category}
+            />
+          ))}
         </div>
       </div>
     </div>

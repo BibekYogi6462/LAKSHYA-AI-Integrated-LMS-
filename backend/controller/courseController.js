@@ -2,7 +2,7 @@ import { response } from "express";
 import Course from "../model/courseModel.js";
 import uploadOnCloudinary from "../config/cloudinary.js";
 import Lecture from "../model/lectureModel.js";
-
+import User from "../model/userModel.js";
 export const createCourse = async (req, res) => {
   try {
     const { title, category } = req.body;
@@ -257,6 +257,23 @@ export const removeLecture = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "Failed to remove lecture",
+    });
+  }
+};
+
+//get creator
+
+export const getCreatorById = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "USer is not found" });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to get instructor",
     });
   }
 };

@@ -8,25 +8,74 @@ import { FaPlayCircle } from "react-icons/fa";
 import { FaLock } from "react-icons/fa6";
 import { useState } from "react";
 import Card from "../component/Card";
-import axios from "axios"; // Add this import
-import { serverUrl } from "../App"; // Import serverUrl from App.js
+import axios from "axios";
+import { serverUrl } from "../App";
+
+// PayPal SDK Script
+// Update your PayPal script loading
+const loadPayPalScript = () => {
+  return new Promise((resolve) => {
+    if (window.paypal) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = `https://www.paypal.com/sdk/js?client-id=${
+      import.meta.env.VITE_PAYPAL_CLIENT_ID
+    }&currency=USD&intent=capture`;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
 const ViewCourse = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
   const { courseData } = useSelector((state) => state.course);
   const { selectedCourse } = useSelector((state) => state.course);
+  const { userData } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [selectedLecture, setSelectedLecture] = useState(null);
   const [creatorData, setCreatorData] = useState(null);
   const [creatorCourses, setCreatorCourses] = useState(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [paypalLoaded, setPaypalLoaded] = useState(false);
+
+  // Check if user is enrolled in the course
+  const checkEnrollment = async () => {
+    if (!userData?._id || !courseId) return;
+
+    try {
+      const response = await axios.get(
+        `${serverUrl}/api/order/check-purchase/${courseId}`,
+        { withCredentials: true }
+      );
+      setIsEnrolled(response.data.purchased);
+    } catch (error) {
+      console.log("Error checking enrollment:", error);
+    }
+  };
+
+  // Load PayPal SDK
+  useEffect(() => {
+    loadPayPalScript().then((success) => {
+      setPaypalLoaded(success);
+    });
+  }, []);
+
+  // Check enrollment when user data or course changes
+  useEffect(() => {
+    if (userData && courseId) {
+      checkEnrollment();
+    }
+  }, [userData, courseId]);
 
   const fetchCourseData = async () => {
     courseData.map((course) => {
       if (course._id === courseId) {
         dispatch(setSelectedCourse(course));
-        console.log(selectedCourse);
-
         return null;
       }
     });
@@ -43,7 +92,6 @@ const ViewCourse = () => {
             },
             { withCredentials: true }
           );
-          console.log(result.data);
           setCreatorData(result.data);
         } catch (error) {
           console.log(error);
@@ -67,11 +115,109 @@ const ViewCourse = () => {
     }
   }, [creatorData, courseData]);
 
+  // PayPal Payment Handler
+  // PayPal Payment Handler - FIXED VERSION
+  const handlePayment = async () => {
+    if (!userData) {
+      alert("Please login to purchase this course");
+      navigate("/login");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Create PayPal order
+      const { data } = await axios.post(
+        `${serverUrl}/api/order/create-paypal-order`,
+        { courseId },
+        { withCredentials: true }
+      );
+
+      console.log("PayPal order response:", data);
+
+      if (data.orderID && window.paypal) {
+        // Clear any existing buttons
+        const container = document.getElementById("paypal-button-container");
+        if (container) {
+          container.innerHTML = "";
+        }
+
+        // Store the order ID in a variable that the PayPal button can access
+        const paypalOrderID = data.orderID;
+
+        // Render PayPal buttons with CORRECT configuration
+        window.paypal
+          .Buttons({
+            createOrder: function (data, actions) {
+              console.log("Using PayPal order ID:", paypalOrderID);
+              // Return the order ID from our backend
+              return paypalOrderID;
+            },
+            onApprove: async function (data, actions) {
+              console.log("Payment approved:", data);
+              try {
+                // Capture payment
+                const response = await axios.post(
+                  `${serverUrl}/api/order/capture-paypal-order`,
+                  { orderID: data.orderID },
+                  { withCredentials: true }
+                );
+
+                console.log("Capture response:", response);
+
+                if (
+                  response.data.message === "Payment completed successfully"
+                ) {
+                  setIsEnrolled(true);
+                  alert(
+                    "Payment successful! You are now enrolled in this course."
+                  );
+                  // You can redirect to course content or refresh the page
+                }
+              } catch (error) {
+                console.error("Payment capture error:", error);
+                alert("Payment failed. Please try again.");
+              }
+            },
+            onError: (err) => {
+              console.error("PayPal error:", err);
+              alert("Payment failed. Please try again.");
+              setLoading(false);
+            },
+            onCancel: () => {
+              console.log("Payment cancelled by user");
+              setLoading(false);
+            },
+          })
+          .render("#paypal-button-container")
+          .then(() => {
+            console.log("PayPal buttons rendered successfully");
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("PayPal button render error:", error);
+            setLoading(false);
+          });
+      } else {
+        console.error("No orderID in response or PayPal not loaded");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Failed to initialize payment. Please try again.");
+      setLoading(false);
+    }
+  };
+  // Handle Watch Now - redirect to course content
+  const handleWatchNow = () => {
+    navigate(`/view-lectures/${courseId}`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6 relative">
         {/* top section  */}
-        <div className="flex flex-col -col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           {/* thumbnail  */}
           <div className="w-full md:w-1/2">
             <FaArrowLeftLong
@@ -105,17 +251,53 @@ const ViewCourse = () => {
                 <span className="text-gray-400">(1200 Reviews)</span>
               </div>
               <div className="text-lg font-semibold text-black">
-                <span>Rs {selectedCourse?.price}</span>{" "}
-                <span className="line-through text-sm text-gray-400">599</span>
+                <span>${selectedCourse?.price}</span>{" "}
+                <span className="line-through text-sm text-gray-400">$599</span>
               </div>
 
               <ul className="text-sm text-gray-700 space-y-1 pt-2">
                 <li>✅ 10+ hours of video content</li>
-                <li>✅ Lifetime accesss to course materials</li>
+                <li>✅ Lifetime access to course materials</li>
+                <li>✅ Certificate of completion</li>
               </ul>
-              <button className="bg-[black] text-white px-6 py-2 rounded hover:bg-gray-700 mt-3 cursor-pointer">
-                Enroll Now
-              </button>
+
+              {/* Enrollment/Payment Section */}
+              <div className="mt-4 w-full">
+                {!isEnrolled ? (
+                  <div className="space-y-3">
+                    <button
+                      className="bg-[black] text-white px-6 py-3 rounded hover:bg-gray-700 w-full font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={handlePayment}
+                      disabled={loading || !paypalLoaded}
+                    >
+                      {loading
+                        ? "Processing..."
+                        : `Enroll Now - $${selectedCourse?.price}`}
+                    </button>
+
+                    {/* PayPal Button Container */}
+                    {paypalLoaded && (
+                      <div
+                        id="paypal-button-container"
+                        className="w-full"
+                      ></div>
+                    )}
+
+                    {!paypalLoaded && (
+                      <p className="text-sm text-gray-500">
+                        Loading payment options...
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 w-full font-semibold cursor-pointer"
+                    onClick={handleWatchNow}
+                  >
+                    Watch Now
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -124,8 +306,11 @@ const ViewCourse = () => {
           <h2 className="text-xl font-semibold mb-2 ">What You'll Learn</h2>
           <ul className="list-disc pl-6 text-gray-700 space-y-1">
             <li>Learn {selectedCourse?.category} from Beginning</li>
+            <li>Build real-world projects</li>
+            <li>Master industry best practices</li>
           </ul>
         </div>
+
         <div className="text-xl font-semibold mb-2">
           <h2>This Course is for</h2>
           <p className="text-gray-700 list-disc pl-6 space-y-1 text-0.5">
@@ -147,14 +332,14 @@ const ViewCourse = () => {
               {selectedCourse?.lectures?.map((lecture, index) => (
                 <button
                   key={index}
-                  disabled={!lecture.isPreviewFree}
+                  disabled={!lecture.isPreviewFree && !isEnrolled}
                   onClick={() => {
-                    if (lecture.isPreviewFree) {
+                    if (lecture.isPreviewFree || isEnrolled) {
                       setSelectedLecture(lecture);
                     }
                   }}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg border transition-all duration-200 text-left ${
-                    lecture.isPreviewFree
+                    lecture.isPreviewFree || isEnrolled
                       ? "hover:bg-gray-100 cursor-pointer border-gray-300 "
                       : "cursor-not-allowed opacity-60 border-gray-200"
                   }${
@@ -164,15 +349,25 @@ const ViewCourse = () => {
                   }`}
                 >
                   <span className="text-lg text-gray-700">
-                    {lecture.isPreviewFree ? <FaPlayCircle /> : <FaLock />}
+                    {lecture.isPreviewFree || isEnrolled ? (
+                      <FaPlayCircle />
+                    ) : (
+                      <FaLock />
+                    )}
                   </span>
                   <span className="text-sm font-medium text-gray-800">
                     {lecture?.lectureTitle}
+                    {!lecture.isPreviewFree && !isEnrolled && (
+                      <span className="text-xs text-gray-500 ml-2">
+                        (Premium)
+                      </span>
+                    )}
                   </span>
                 </button>
               ))}
             </div>
           </div>
+
           <div className="bg-white w-full md:w-3/5 p-6 rounded-2xl shadow-lg border border-gray-200">
             <div className="aspect-video w-full rounded-lg overflow-hidden mb-4 bg-black flex items-center justify-center">
               {selectedLecture?.videoUrl ? (
@@ -183,10 +378,31 @@ const ViewCourse = () => {
                 />
               ) : (
                 <span className="text-white text-sm ">
-                  Select a preview lecture to watch
+                  {isEnrolled
+                    ? "Select a lecture to watch"
+                    : "Select a preview lecture to watch"}
                 </span>
               )}
             </div>
+
+            {/* Show message for locked content */}
+            {selectedLecture &&
+              !selectedLecture.isPreviewFree &&
+              !isEnrolled && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                  <FaLock className="mx-auto text-yellow-500 mb-2" />
+                  <p className="text-yellow-700 font-medium">Premium Content</p>
+                  <p className="text-yellow-600 text-sm">
+                    Enroll in the course to access all lectures
+                  </p>
+                  <button
+                    onClick={handlePayment}
+                    className="mt-2 bg-black text-white px-4 py-2 rounded hover:bg-gray-700 text-sm"
+                  >
+                    Enroll Now
+                  </button>
+                </div>
+              )}
           </div>
         </div>
 
@@ -211,7 +427,6 @@ const ViewCourse = () => {
         </div>
 
         {/* For Instructor/creator info */}
-
         <div className="flex items-center gap-4 pt-4 border-t">
           {creatorData?.photoUrl ? (
             <img
@@ -232,14 +447,14 @@ const ViewCourse = () => {
               {creatorData?.description}
             </p>
             <p className="md:text-sm text-gray-600 text-[10px]">
-              creatorData?.email
+              {creatorData?.email}
             </p>
           </div>
         </div>
 
         <div>
           <p className="text-xl font-semibold mb-2">
-            Other Publised Courses by the Educator -
+            Other Published Courses by the Educator -
           </p>
         </div>
         <div className="w-full transition-all duration-300 py-[20px] flex items-start justify-center lg:justify-start flex-wrap gap-6 lg:px-[80px] ">

@@ -114,6 +114,8 @@ import CreateLecture from "./pages/Educator/CreateLecture";
 import EditLecture from "./pages/Educator/EditLecture";
 import ViewCourse from "./pages/ViewCOurse";
 import getPublishedCourse from "./customHooks/getPublishedCourse"; // ADD THIS IMPORT
+import ScrollToTop from "./component/ScrollToTop";
+import ViewLectures from "./pages/ViewLectures";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -126,6 +128,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -215,6 +218,16 @@ const App = () => {
           element={
             userData?.role === "instructor" ? (
               <ViewCourse />
+            ) : (
+              <Navigate to={"/signup"} />
+            )
+          }
+        />
+        <Route
+          path="/viewlecture/:courseId/"
+          element={
+            userData?.role === "instructor" ? (
+              <ViewLectures />
             ) : (
               <Navigate to={"/signup"} />
             )

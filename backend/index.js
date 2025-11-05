@@ -5,10 +5,9 @@ import cookieParser from "cookie-parser";
 import authRouter from "./route/authRoute.js";
 import cors from "cors";
 import userRouter from "./route/userRoute.js";
-import courseRouter from "./route/courseROute.js";
+import courseRouter from "./route/courseRoute.js";
 import orderRoute from "./route/orderRoute.js";
-
-// Add this with your other routes
+import progressRoutes from "./route/progress.js"; // Fixed path
 
 dotenv.config();
 
@@ -17,7 +16,6 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(express.json());
-
 app.use(cookieParser());
 
 app.use(
@@ -27,10 +25,12 @@ app.use(
   })
 );
 
+// Your routes
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/order", orderRoute);
+app.use("/api/progress", progressRoutes); // Progress routes
 
 app.get("/", (req, res) => {
   res.send("Hello from Server");

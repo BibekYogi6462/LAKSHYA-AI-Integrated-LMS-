@@ -21,6 +21,7 @@ import ViewCourse from "./pages/ViewCOurse";
 import getPublishedCourse from "./customHooks/getPublishedCourse";
 import ScrollToTop from "./component/ScrollToTop";
 import ViewLectures from "./pages/ViewLectures";
+import MyEnrolledCourses from "./pages/MyEnrolledCourses";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -122,19 +123,19 @@ const App = () => {
         />
         <Route
           path="/viewcourse/:courseId"
-          element={
-            userData?.role === "instructor" ? (
-              <ViewCourse />
-            ) : (
-              <Navigate to={"/signup"} />
-            )
-          }
+          element={userData ? <ViewCourse /> : <Navigate to={"/signup"} />}
         />
 
         {/* Allow all authenticated users to view lectures */}
         <Route
           path="/view-lectures/:courseId"
           element={userData ? <ViewLectures /> : <Navigate to={"/signup"} />}
+        />
+        <Route
+          path="/mycourses"
+          element={
+            userData ? <MyEnrolledCourses /> : <Navigate to={"/signup"} />
+          }
         />
       </Routes>
     </>

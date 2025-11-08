@@ -47,7 +47,7 @@ export const signUp = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email }).populate("enrolledCourses");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

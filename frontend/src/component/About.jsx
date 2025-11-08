@@ -2,6 +2,7 @@ import React from "react";
 import about from "../assets/girl.jpg";
 import video from "../assets/video.mp4";
 import { TfiLayoutLineSolid } from "react-icons/tfi";
+import { BsFillPatchCheckFill } from "react-icons/bs";
 const About = () => {
   return (
     <div className="w-[100vw] lg:h-[70vh] min-h-[50vh] flex flex-wrap items-center justify-center gap-2 mb-[30px]">
@@ -24,6 +25,34 @@ const About = () => {
         <div className="flex text-[20px] items-center justify-center gap-[20px] ">
           About Us
           <TfiLayoutLineSolid className="w-[40px]  h-[40px]" />
+        </div>
+        <div className="md:text-[45px] text-[35px] font-semibold">
+          Lets Maximize your Learning Growth
+        </div>
+        <div className="text-[15px]">
+          We provide a modern learning managemetn system to simplify online
+          education, track progress, and enhance student-instructor
+          collaboration efficiently.
+        </div>
+        <div className="w-[100%] lg:w-[60%]">
+          <div className="grid grid-cols-2 gap-4 mt-[40px]">
+            <div className="flex items-center gap-[10px]">
+              <BsFillPatchCheckFill className="w-[20px] h-[20px]" />
+              Simplified Learning
+            </div>
+            <div className="flex items-center gap-[10px]">
+              <BsFillPatchCheckFill className="w-[20px] h-[20px]" />
+              Expert Trainers
+            </div>
+            <div className="flex items-center gap-[10px]">
+              <BsFillPatchCheckFill className="w-[20px] h-[20px]" />
+              Big Experience
+            </div>
+            <div className="flex items-center gap-[10px]">
+              <BsFillPatchCheckFill className="w-[20px] h-[20px]" />
+              LifeTime Access
+            </div>
+          </div>
         </div>
       </div>
     </div>

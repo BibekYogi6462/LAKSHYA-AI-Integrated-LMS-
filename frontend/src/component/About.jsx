@@ -13,7 +13,7 @@ const About = () => {
           <video
             src={video}
             className="w-full rounded-xl shadow-lg border-2 border-white"
-            controls
+            // controls
             autoPlay
             loop
           />

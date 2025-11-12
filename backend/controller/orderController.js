@@ -185,22 +185,37 @@ export const capturePayPalOrder = async (req, res) => {
       order.payerId = capture.payer.payer_id;
       await order.save();
 
-      // DEBUG: Log before adding to enrolledCourses
+      // DEBUG: Log before enrollment
       console.log("=== ENROLLMENT DEBUG ===");
       console.log("User ID:", userId);
       console.log("Course ID to enroll:", order.course);
 
-      // Add course to user's enrolled courses
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        {
-          $addToSet: { enrolledCourses: order.course },
-        },
-        { new: true } // Return updated document
-      );
+      // ✅ FIXED: Add course to user's enrolledCourses AND user to course's enrolledStudents
+      const [updatedUser, updatedCourse] = await Promise.all([
+        // Add course to user's enrolled courses
+        User.findByIdAndUpdate(
+          userId,
+          {
+            $addToSet: { enrolledCourses: order.course },
+          },
+          { new: true }
+        ),
+        // Add user to course's enrolled students
+        Course.findByIdAndUpdate(
+          order.course,
+          {
+            $addToSet: { enrolledStudents: userId },
+          },
+          { new: true }
+        ),
+      ]);
 
-      // DEBUG: Log after update
+      // DEBUG: Log after updates
       console.log("Updated user enrolledCourses:", updatedUser.enrolledCourses);
+      console.log(
+        "Updated course enrolledStudents:",
+        updatedCourse.enrolledStudents
+      );
       console.log("=== END ENROLLMENT DEBUG ===");
 
       res.status(200).json({

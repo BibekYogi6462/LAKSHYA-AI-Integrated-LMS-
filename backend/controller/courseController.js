@@ -60,12 +60,32 @@ export const getPublishedCourses = async (req, res) => {
       .json({ message: `Failed to find published courses ${error}` });
   }
 };
+// export const getCreatorCourses = async (req, res) => {
+//   try {
+//     const userId = req.userId;
+//     const courses = await Course.find({
+//       creator: userId,
+//     });
+//     if (!courses) {
+//       return res.status(400).json({ message: "Courses Not Found" });
+//     }
+//     return res.status(200).json(courses);
+//   } catch (error) {
+//     return res
+//       .status(500)
+//       .json({ message: `Failed to Get Creator Courses ${error}` });
+//   }
+// };
+
 export const getCreatorCourses = async (req, res) => {
   try {
     const userId = req.userId;
     const courses = await Course.find({
       creator: userId,
-    });
+    })
+      .populate("lectures") // ✅ Add this
+      .populate("enrolledStudents"); // ✅ Add this
+
     if (!courses) {
       return res.status(400).json({ message: "Courses Not Found" });
     }

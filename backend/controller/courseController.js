@@ -36,6 +36,32 @@ export const createCourse = async (req, res) => {
 //       .json({ message: `Failed to find publised courses ${error}` });
 //   }
 // };
+
+// export const getPublishedCourses = async (req, res) => {
+//   try {
+//     const courses = await Course.find({ isPublished: true })
+//       .populate({
+//         path: "lectures",
+//         model: "Lecture",
+//       })
+//       .exec();
+
+//     console.log(
+//       "AFTER POPULATE - First course lectures:",
+//       courses[0]?.lectures
+//     );
+
+//     if (!courses) {
+//       return res.status(400).json({ message: "Courses Not Found" });
+//     }
+//     return res.status(200).json(courses);
+//   } catch (error) {
+//     return res
+//       .status(500)
+//       .json({ message: `Failed to find published courses ${error}` });
+//   }
+// };
+
 export const getPublishedCourses = async (req, res) => {
   try {
     const courses = await Course.find({ isPublished: true })
@@ -43,16 +69,23 @@ export const getPublishedCourses = async (req, res) => {
         path: "lectures",
         model: "Lecture",
       })
+      .populate({
+        path: "reviews",
+        model: "Review",
+        populate: {
+          path: "user",
+          model: "User",
+          select: "name photoUrl role", // fields to include
+        },
+      })
       .exec();
 
-    console.log(
-      "AFTER POPULATE - First course lectures:",
-      courses[0]?.lectures
-    );
+    console.log("AFTER POPULATE - First course reviews:", courses[0]?.reviews);
 
     if (!courses) {
       return res.status(400).json({ message: "Courses Not Found" });
     }
+
     return res.status(200).json(courses);
   } catch (error) {
     return res
@@ -60,6 +93,7 @@ export const getPublishedCourses = async (req, res) => {
       .json({ message: `Failed to find published courses ${error}` });
   }
 };
+
 // export const getCreatorCourses = async (req, res) => {
 //   try {
 //     const userId = req.userId;

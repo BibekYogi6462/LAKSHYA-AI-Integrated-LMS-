@@ -8,6 +8,7 @@ import userRouter from "./route/userRoute.js";
 import courseRouter from "./route/courseRoute.js";
 import orderRoute from "./route/orderRoute.js";
 import progressRoutes from "./route/progress.js"; // Fixed path
+import reviewRouter from "./route/reviewRoute.js";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use("/api/user", userRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/order", orderRoute);
 app.use("/api/progress", progressRoutes); // Progress routes
+app.use("/api/review", reviewRouter); // Progress routes
 
 app.get("/", (req, res) => {
   res.send("Hello from Server");

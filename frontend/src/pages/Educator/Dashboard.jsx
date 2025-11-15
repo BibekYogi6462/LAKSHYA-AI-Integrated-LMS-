@@ -29,6 +29,14 @@ const Dashboard = () => {
       enrolled: course.enrolledStudents.length || 0,
     })) || [];
 
+  const totalEarning =
+    creatorCourseData?.reduce((sum, course) => {
+      const studentCount = course.enrolledStudents?.length || 0;
+      const courseRevenue = course.price ? course.price * studentCount : 0;
+
+      return sum + courseRevenue;
+    }, 0) || 0;
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <FaArrowLeftLong
@@ -49,7 +57,7 @@ const Dashboard = () => {
               Welcome,👋 {userData?.name || "Instructor"}
             </h1>
             <h1 className="text-xl font-semibold text-gray-800">
-              Total Earning: 0
+              Total Earning: $ {totalEarning.toLocaleString()}
             </h1>
             <p className="text-gray-600 text-sm">
               {userData?.description || "Start Creating Courses"}

@@ -40,7 +40,10 @@ const Home = () => {
             View All Courses
             <SiViaplay className="w-[30px] h-[30px] " />
           </button>
-          <button className="px-[20px] py-[10px] border-2 border-sky-300 bg-sky-500/80 backdrop-blur-sm text-white rounded-[10px] text-[18px] font-light flex gap-2 cursor-pointer hover:bg-sky-600 transition-all duration-300 shadow-lg">
+          <button
+            className="px-[20px] py-[10px] border-2 border-sky-300 bg-sky-500/80 backdrop-blur-sm text-white rounded-[10px] text-[18px] font-light flex gap-2 cursor-pointer hover:bg-sky-600 transition-all duration-300 shadow-lg"
+            onClick={() => navigate("/search")}
+          >
             Search With AI
             <img
               src={ai}

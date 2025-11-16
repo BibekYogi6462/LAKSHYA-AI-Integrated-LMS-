@@ -252,7 +252,10 @@ const AllCourses = () => {
           onSubmit={(e) => e.preventDefault()}
           className="space-y-4 text-sm bg-gray-600 border-white text-[white] border p-[20px] rounded-2xl"
         >
-          <button className="px-[10px] py-[10px] bg-black text-white rounded-[10px] text-[15px] font-light flex items-center justify-center gap-2">
+          <button
+            className="px-[10px] py-[10px] bg-black text-white rounded-[10px] text-[15px] font-light flex items-center justify-center gap-2"
+            onClick={() => navigate("/search")}
+          >
             Search With AI
             <img src={img} alt="" className="w-[30px] h-[30px] rounded-full" />
           </button>

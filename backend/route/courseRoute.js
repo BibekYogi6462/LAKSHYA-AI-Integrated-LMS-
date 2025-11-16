@@ -14,6 +14,7 @@ import {
 } from "../controller/courseController.js";
 import isAuth from "../middleware/isAuth.js";
 import upload from "../middleware/multer.js";
+import { searchWithAi } from "../controller/searchController.js";
 
 const courseRouter = express.Router();
 
@@ -43,5 +44,8 @@ courseRouter.post(
 );
 courseRouter.delete("/removelecture/:lectureId", isAuth, removeLecture);
 courseRouter.post("/creator", isAuth, getCreatorById);
+
+// for serch
+courseRouter.post("/search", searchWithAi);
 
 export default courseRouter;

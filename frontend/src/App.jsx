@@ -25,7 +25,8 @@ import MyEnrolledCourses from "./pages/MyEnrolledCourses";
 import getAllReviews from "./customHooks/getAllReviews";
 import SearchWithAi from "./pages/SearchWithAi";
 
-export const serverUrl = "http://localhost:8000";
+//export const serverUrl = "http://localhost:8000";
+export const serverUrl = "https://lakshya-ai-integrated-lms.onrender.com"
 
 const App = () => {
   useGetCurrentUser();

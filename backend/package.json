@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/genai": "^1.31.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "axios": "^1.13.1",
     "bcryptjs": "^3.0.2",

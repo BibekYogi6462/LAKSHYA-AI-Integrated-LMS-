@@ -17,7 +17,7 @@ import EditCourse from "./pages/Educator/EditCourse";
 import AllCourses from "./pages/AllCourses";
 import CreateLecture from "./pages/Educator/CreateLecture";
 import EditLecture from "./pages/Educator/EditLecture";
-import ViewCourse from "./pages/ViewCOurse";
+import ViewCourse from "./pages/ViewCourse";
 import getPublishedCourse from "./customHooks/getPublishedCourse";
 import ScrollToTop from "./component/ScrollToTop";
 import ViewLectures from "./pages/ViewLectures";

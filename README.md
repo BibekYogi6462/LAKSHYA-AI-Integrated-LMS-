@@ -64,8 +64,9 @@ Here are some screenshots from the application:
 *Instructor dashboard with analytics, earnings, and course management.*
 
 ### 6. Hero Section
-![Hero Page](./Screen-shots/herepage.jpg)  
+![Hero Page](./Screen-shots/heropage.jpg)  
 *Main banner showcasing course categories and features.*
+
 
 
 

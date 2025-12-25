@@ -39,39 +39,33 @@ LAKSHYA is an AI-powered Learning Management System (LMS) built using the **MERN
 
 ---
 
-
----
-
 ## 🖼️ Screenshots
 
 Here are some screenshots from the application:
 
-
 ### 1. Home Page
-![Hero Page](<img width="1918" height="911" alt="image" src="https://github.com/user-attachments/assets/56eda047-4561-4920-9403-3887e465f4b8" />
-)  
-*Explore courses across various domains.*
+![Home Page](./Screen-shots/homepage.jpg)  
+*Landing page showcasing available courses.*
 
 ### 2. Search with AI
-![Search With AI](<img width="1913" height="821" alt="image" src="https://github.com/user-attachments/assets/6674dbf6-da82-41df-baf5-14a263dc3f4a" />
-)  
-*AI-powered course search interface.*
+![Search With AI](./Screen-shots/searchwithai.jpg)  
+*AI-powered course search interface with smart filtering.*
 
-### 2. Course Listing Page
-![Course Page](<img width="1917" height="907" alt="image" src="https://github.com/user-attachments/assets/d433cf8e-540c-499b-ac49-e82c28d6545a" />
-)  
-*Filter and browse courses by category.*
+### 3. Course Listing Page
+![Course Page](./Screen-shots/coursepage.jpg)  
+*Browse and filter courses by various categories.*
 
-### 4. Reviews 
-![Reviews Page](<img width="1913" height="903" alt="image" src="https://github.com/user-attachments/assets/d7261690-2325-440e-a4be-a6cacf57063b" />
-)  
-*Real feedback from learners worldwide.*
+### 4. Reviews Page
+![Reviews Page](./Screen-shots/reviewpage.jpg)  
+*Real feedback and ratings from learners worldwide.*
 
 ### 5. Admin Dashboard
-![Dashboard](<img width="1918" height="892" alt="image" src="https://github.com/user-attachments/assets/07d60f04-cdea-4f15-b34d-e2b75c777a4f" />
-)  
-*Instructor dashboard with earnings, course progress, and enrollment stats.*
+![Dashboard](./Screen-shots/dashboard.jpg)  
+*Instructor dashboard with analytics, earnings, and course management.*
 
+### 6. Hero Section
+![Hero Page](./Screen-shots/herepage.jpg)  
+*Main banner showcasing course categories and features.*
 
 
 
